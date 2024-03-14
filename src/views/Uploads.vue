@@ -46,30 +46,23 @@
 
 <script>
 import {onMounted, ref} from 'vue';
-import axios from 'axios';
 import Badge from '@/components/Batch.vue';
 import Paginator from '@/components/Paginator.vue';
+import {useGetPayloads} from '@/composable/useGetPayloads.js';
 
 export default {
   name: 'Uploads',
   components: {Paginator, Badge},
 
   setup(props) {
-    const data = ref([]);
-    const links = ref([]);
-    const currentPage = ref(0);
 
-    const getPagination = (page) => {
-      getData(page.page);
-    };
-
-    const getData = (page) => {
-      axios.get('/v1/upload?page=' + page).then((response) => {
-        data.value = response.data.data;
-        links.value = response.data.meta.links;
-        currentPage.value = response.data.meta.current_page;
-      });
-    };
+    const {
+      getData,
+      getPagination,
+      data,
+      links,
+      currentPage
+    } = useGetPayloads('/v1/upload');
 
     onMounted(() => {
       getData(1);

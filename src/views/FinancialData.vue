@@ -124,28 +124,22 @@
 
 <script>
 import {onMounted, ref} from 'vue';
-import axios from 'axios';
 import Paginator from '@/components/Paginator.vue';
+import {useGetPayloads} from '@/composable/useGetPayloads.js';
 
 export default {
   name: 'FinancialData',
   components: {Paginator},
   setup(props) {
-    const data = ref([]);
-    const links = ref([]);
-    const currentPage = ref(0);
 
-    const getPagination = (page) => {
-      getData(page.page);
-    };
+    const {
+      getData,
+      getPagination,
+      data,
+      links,
+      currentPage
+    } = useGetPayloads('/v1/sectors-financial-data');
 
-    const getData = (page) => {
-      axios.get('/v1/sectors-financial-data?page=' + page).then((response) => {
-        data.value = response.data.data;
-        links.value = response.data.meta.links;
-        currentPage.value = response.data.meta.current_page;
-      });
-    };
     onMounted(() => {
       getData(1);
     });
