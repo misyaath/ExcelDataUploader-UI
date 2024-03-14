@@ -124,7 +124,7 @@
 
           <li v-for="(item , key) in links">
 
-            <a href="#" v-if="key === 0 "
+            <a href="#" v-if="key === 0 " @click="previous"
                class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
             <a href="#" v-else
                @click="getPagination(key)"
@@ -136,7 +136,7 @@
             </a>
           </li>
           <li>
-            <a href="#"
+            <a href="#" @click="next"
                class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
           </li>
         </ul>
@@ -154,7 +154,15 @@ export default {
   setup(props) {
     const data = ref([]);
     const links = ref([]);
+    const currentPage = ref(0);
 
+    const next = () => {
+      getData(currentPage.value + 1);
+    };
+
+    const previous = () => {
+      getData(currentPage.value - 1);
+    };
     const getPagination = (page) => {
       getData(page);
     };
@@ -163,6 +171,7 @@ export default {
       axios.get('/v1/sectors-financial-data?page=' + page).then((response) => {
         data.value = response.data.data;
         links.value = response.data.meta.links;
+        currentPage.value = response.data.meta.current_page;
       });
     };
     onMounted(() => {
@@ -172,7 +181,9 @@ export default {
     return {
       data,
       links,
-      getPagination
+      getPagination,
+      next,
+      previous
     };
   }
 };
