@@ -16,6 +16,7 @@ export function useGetPayloads(endpoint) {
 	};
 
 	const getPagination = (page) => {
+		console.log(page)
 		getData(page.page);
 	};
 
